@@ -1,3 +1,4 @@
+/* eslint-disable strict */
 /**
  * Example store structure
  */
@@ -53,6 +54,21 @@ const store = {
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 
+function renderView() {
+  console.log('`renderView` ran')
+}
+
 /********** EVENT HANDLER FUNCTIONS **********/
 
 // These functions handle events (submit, click, etc)
+
+function handleQuiz() {
+  renderView();
+
+
+
+
+
+}
+
+$(handleQuiz);
