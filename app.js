@@ -35,23 +35,23 @@ const store = {
       answers: [
         '1970',
         '2015',
-        '2019',
+        '2020',
         '2005'
       ],
-      correctAnswer: '2019'
+      correctAnswer: '2020'
     }
   ],
 };
 
 let currentView = 0; // this stores our current view location, updates on each view change
 
-let currentQuestion = 0; // this stores the question we're currently answering, updates on next question button click
+currentQuestion = 0; // this stores the question we're currently answering, updates on next question button click
 
 let score = 0;
 
 let html = '';
 
-let questionCorrectIncorrect = '';
+let questionCorrectIncorrect = 'Initial State';
 
 const view = [
   `<div>
@@ -59,7 +59,6 @@ const view = [
     <button class="js-start-button">Start</button>
   </div>`, // 0 start view
   `<div>
-    <p>Here is the first question!</p>
     <p>${store.questions[currentQuestion].question}</p>
     <input type="radio" id="answ0" name="question" value="${store.questions[currentQuestion].answers[0]}">
     <label for="answ0">${store.questions[currentQuestion].answers[0]}</label>
@@ -72,18 +71,22 @@ const view = [
     <button class="js-submit-question-button">Submit</button>
 </div>`, // 1 question view
   `<div>
-  <p>Your answer was ${questionCorrectIncorrect}</p>
+  <p>Your answer was correct</p>
   <button class="js-next-question-button">Next</button>
-</div>`, // 2 question response view
+</div>`, // 2 question correct response view
+  `<div>
+    <p>Your answer was incorrect</p>
+    <button class="js-next-question-button">Next</button>
+  </div>`, // 3 question incorrect response view
   `<div>
     <p>Here is the quiz finish!</p>
     <button class="js-restart-button">Restart</button>
-  </div>`, // 3 quiz finish view
+  </div>`, // 4 quiz finish view
   `<div>
   <p>Here is the scoreboard!</p>
     <p>Question: ${currentQuestion + 1}/${store.questions.length}</p>
     <p>Score: ${score}</p>
-  </div>`, // 4 scoreboard view
+  </div>`, // 5 scoreboard view
 ];
 
 
@@ -112,32 +115,41 @@ function getStartView(index) { // this should switch to id, not index
   return view[index]; // this gets the right HTML from the view array
 }
 
-function getQuestion(index) {
+function getQuestion() {
   console.log('`getQuestion` ran');
   return view[1]; // return the question view
 }
 
 function getScoreBoard() {
   console.log('`getScoreBoard` ran');
-  return view[4]; // return the scoreboard
+  return view[5]; // return the scoreboard
 }
 
 function getQuestionEval(answer) {
   console.log('`getQuestionEval` ran');
-  console.log(`Your answer is ${answer}`)
   console.log(`Correct answer is ${store.questions[currentQuestion].correctAnswer}`)
-  if (store.questions[currentQuestion].correctAnswer === answer) { // evaluate against the correctAnswer key
+  console.log(`Your answer was ${answer}`)
+  if (store.questions[currentQuestion].correctAnswer === answer) {
     return 'Correct';
-    console.log('correct')
   } else {
     return 'Incorrect';
-    console.log('incorrect')
   }
 }
 
-function getQuestionResponse() {
-  console.log('`getQuestionResponse` ran');
+function getQuestionCorrectResponse() {
+  console.log('`getQuestionCorrectResponse` ran');
   return view[2];
+}
+
+function getQuestionIncorrectResponse() {
+  console.log('`getQuestionIncorrectResponse` ran');
+  return view[3];
+}
+
+function getFinish() {
+  console.log('`getFinish` ran');
+  currentQuestion = 0;
+  return view[4]
 }
 
 
@@ -157,17 +169,21 @@ function render(index) {
     break;
   case 1: // Question view
     html = getScoreBoard(); // scoreboard is visible over all questions and the finish view
-    html += getQuestion(index);
+    html += getQuestion();
     break;
-  case 2: // Question response view
+  case 2: // Question correct response view
     html = getScoreBoard();
-    html += getQuestionResponse(index);
+    html += getQuestionCorrectResponse(index);
     break;
-  case 3: // Quiz finish view
+  case 3: // Question incorrect response view
+    html = getScoreBoard();
+    html += getQuestionIncorrectResponse(index);
+  break;
+  case 4: // Quiz finish view
     html = getScoreBoard();
     html += getFinish();
     break;
-  case 4: // Scoreboard view
+  case 5: // Scoreboard view
     html = getScoreBoard(); // this should not trigger normally
     break;
   default:
@@ -195,21 +211,32 @@ function handleSubmitQuestion() {
   $('main').on('click', '.js-submit-question-button', event => {
     event.preventDefault();
     console.log('`handleSubmitQuestion` ran');
-    questionCorrectIncorrect = getQuestionEval($('input:checked').val());
-    render(2); // go to question response view
+    if (currentQuestion === store.questions.length) {
+      render(4);
+    } else {
+      if (getQuestionEval($('input:checked').val()) === 'Correct') {
+        currentQuestion ++;
+        render(2); // go to question correct response view
+      } else {
+        currentQuestion ++;
+        render(3); // go to question incorrect response view
+      }
+    }
   })
 }
 
 function handleNextQuestion() {
   console.log('`handleNextQuestion` ran')
   $('main').on('click', '.js-next-question-button', event => {
-    currentQuestion ++; // move to the next question
     render(1) // go to question view
   })
 }
 
 function handleRestart() {
   console.log('`handleRestart` ran')
+  $('main').on('click', '.js-restart-button', event => {
+    render(0) // go to the main page
+  })
 }
 
 
