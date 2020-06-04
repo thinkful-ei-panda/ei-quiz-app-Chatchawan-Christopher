@@ -2,6 +2,18 @@
 /**
  * Example store structure
  */
+
+let currentView = 0; // this stores our current view location, updates on each view change
+
+let currentQuestion = 0; // this stores the question we're currently answering, updates on next question button click
+
+
+const view = [
+  '<p>Welcome to the quiz!</p><br><button>Start Quiz</button>',
+  '<p>This is the question page</p>',
+  '<p>This is the end of the quiz!</p><br><button>Restart Quiz</button>'
+]
+
 const store = {
   // 5 or more questions are required
   questions: [
@@ -50,12 +62,22 @@ const store = {
 
 // These functions return HTML templates
 
+function getPageHTML(index) { // this should switch to id, not index
+  return view[index] // this gets the right HTML from the view array
+}
+
 /********** RENDER FUNCTION(S) **********/
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 
-function renderView() {
+function renderMainPage() {
   console.log('`renderView` ran')
+
+  // render the quiz in the DOM
+  const quizItemsString = getPageHTML(0);
+
+  // insert that HTML into the DOM
+  $('main').html(quizItemsString);
 }
 
 /********** EVENT HANDLER FUNCTIONS **********/
@@ -63,7 +85,7 @@ function renderView() {
 // These functions handle events (submit, click, etc)
 
 function handleQuiz() {
-  renderView();
+  renderMainPage();
 
 
 
