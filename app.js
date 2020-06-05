@@ -28,7 +28,8 @@ const store = {
         'pink',
         'green'
       ],
-      correctAnswer: 'green'
+      correctAnswer: 'green',
+      funFact: `Did you know that cabbage, broccoli, cauliflower, kale, Brussels sprouts, collard greens, Savoy cabbage, kohlrabi, and gai lan are all the same species, <b><i>Brassica oleracea</b></i>?</p>`
     },
     {
       question: 'What is the current year?',
@@ -39,6 +40,7 @@ const store = {
         '2005'
       ],
       correctAnswer: '2020'
+      funFact: `2020 is the worst year in my life!`
     }
   ],
   score: 0,
@@ -69,10 +71,12 @@ const store = {
 
 function createStart() {
   return `
-    <div>
+  <body>
+    <div class="box">
       <p>Welcome to the quiz, press Start to begin</p>
       <button class="js-start-button">Start</button>
-    </div>`;
+    </div>
+  </body>`;
 }
 
 function createQuestion() {
@@ -81,10 +85,12 @@ function createQuestion() {
   let answer2 = store.questions[store.currentQuestion].answers[1];
   let answer3 = store.questions[store.currentQuestion].answers[2];
   let answer4 = store.questions[store.currentQuestion].answers[3];
+
   return `
-    <div>
+  <body>
+    <div class="box">
       <label>${question}</label><br>
-      <div class="radio-field">
+      <div class="box">
         <input type="radio" name="question" value="${answer1}">
         <label for="question">${answer1}</label><br>
         <input type="radio" name="question" value="${answer2}">
@@ -92,45 +98,58 @@ function createQuestion() {
         <input type="radio" name="question" value="${answer3}">
         <label for="question">${answer3}</label><br>
         <input type="radio" name="question" value="${answer4}">
-        <label for="question">${answer4}</label><br>
+        <label for="question">${answer4}</label>
       </div>
         <button class="js-submit-answer-button">Submit</button>
-    </div>`;
+    </div>
+  </body>`;
 }
 
 function createScore() {
   let score = store.score;
   let questionNumber = store.currentQuestion;
   let totalQuestions = store.questions.length;
+
   return `
-    <div>
-      <p>Score: ${score}<p>
-      <p>Question ${questionNumber}/${totalQuestions}</p>
-    </div>`;
+    <body>
+      <div class="box">
+        <p>Score: ${score}<p>
+        <p>Question ${questionNumber}/${totalQuestions}</p>
+      </div>
+    </body>`;
 }
 
 function createIncorrect() {
   let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
+
   return `
-    <div>
+  <body>
+    <div class="box">
       <p>Not quite!</p>
       <p>The correct answer was ${correctAnswer}!</p>
       <button class="js-next-question-button">Next</button>
-    </div>`;
+    </div>
+  </body>`;
 }
 
 function createCorrect() {
   return `
-    <div>
+  <body>
+    <div class="box">
       <p>You're right!</p>
+      <p>
       <button class="js-next-question-button">Next</button>
     </div>`;
 }
 
 function createFinish() {
+  let correctQuestions = store.score;
+  let totalQuestions = store.questions.length;
+
   return `
   <div>
     <p>You've finished my quiz!</p>
+    <p>Your score was ${correctQuestions} correct out of ${totalQuestions} questions.</p>
     <button class="js-restart-button">Restart</button>
   </div>`;
 }
@@ -154,20 +173,17 @@ function renderQuestion() {
 }
 
 function renderCorrect() {
-  let html = createScore();
-  html += createCorrect();
+  let html = createCorrect();
   $('main').html(html);
 }
 
 function renderIncorrect() {
-  let html = createScore();
-  html += createIncorrect();
+  let html = createIncorrect();
   $('main').html(html);
 }
 
 function renderFinish() {
-  let html = createScore();
-  html += createFinish();
+  let html = createFinish();
   $('main').html(html);
 }
 
@@ -191,6 +207,8 @@ function handleSubmitQuestion() {
     if ($('input:checked').val() === correctAnswer) {
       store.score ++;
       renderCorrect();
+    } else if ($('input:checked').val() === undefined) {
+      alert('You did not choose an answer!');
     } else {
       renderIncorrect();
     }
