@@ -41,60 +41,18 @@ const store = {
       correctAnswer: '2020'
     }
   ],
+  score: 0,
+  currentQuestion: 0
 };
 
-let currentView = 0; // this stores our current view location, updates on each view change
 
-currentQuestion = 0; // this stores the question we're currently answering, updates on next question button click
-
-let score = 0;
-
-let html = '';
-
-let questionCorrectIncorrect = 'Initial State';
-
-const view = [
-  `<div>
-    <p>Welcome to the quiz!</p>
-    <button class="js-start-button">Start</button>
-  </div>`, // 0 start view
-  `<div>
-    <p>${store.questions[currentQuestion].question}</p>
-    <input type="radio" id="answ0" name="question" value="${store.questions[currentQuestion].answers[0]}">
-    <label for="answ0">${store.questions[currentQuestion].answers[0]}</label>
-    <input type="radio" id="answ1" name="question" value="${store.questions[currentQuestion].answers[1]}">
-    <label for="answ1">${store.questions[currentQuestion].answers[1]}</label>
-    <input type="radio" id="answ2" name="question" value="${store.questions[currentQuestion].answers[2]}">
-    <label for="answ2">${store.questions[currentQuestion].answers[2]}</label>
-    <input type="radio" id="answ3" name="question" value="${store.questions[currentQuestion].answers[3]}">
-    <label for="answ3">${store.questions[currentQuestion].answers[3]}</label>
-    <button class="js-submit-question-button">Submit</button>
-</div>`, // 1 question view
-  `<div>
-  <p>Your answer was correct</p>
-  <button class="js-next-question-button">Next</button>
-</div>`, // 2 question correct response view
-  `<div>
-    <p>Your answer was incorrect</p>
-    <button class="js-next-question-button">Next</button>
-  </div>`, // 3 question incorrect response view
-  `<div>
-    <p>Here is the quiz finish!</p>
-    <button class="js-restart-button">Restart</button>
-  </div>`, // 4 quiz finish view
-  `<div>
-  <p>Here is the scoreboard!</p>
-    <p>Question: ${currentQuestion + 1}/${store.questions.length}</p>
-    <p>Score: ${score}</p>
-  </div>`, // 5 scoreboard view
-];
 
 
 /**
  * 
  * Technical requirements:
  * 
- * Your app should include a render() function, that regenerates the view each time the store is updated. 
+ * Your app should include a render() function, that recreates the view each time the store is updated. 
  * See your course material, consult your instructor, and reference the slides for more details.
  *
  * NO additional HTML elements should be added to the index.html file.
@@ -109,47 +67,72 @@ const view = [
 
 // These functions return HTML templates
 
-
-function getStartView(index) { // this should switch to id, not index
-  console.log('`getStartView` ran');
-  return view[index]; // this gets the right HTML from the view array
+function createStart() {
+  return `
+    <div>
+      <p>Welcome to the quiz, press Start to begin</p>
+      <button class="js-start-button">Start</button>
+    </div>`;
 }
 
-function getQuestion() {
-  console.log('`getQuestion` ran');
-  return view[1]; // return the question view
+function createQuestion() {
+  let question = store.questions[store.currentQuestion].question;
+  let answer1 = store.questions[store.currentQuestion].answers[0];
+  let answer2 = store.questions[store.currentQuestion].answers[1];
+  let answer3 = store.questions[store.currentQuestion].answers[2];
+  let answer4 = store.questions[store.currentQuestion].answers[3];
+  return `
+    <div>
+      <label>${question}</label><br>
+      <div class="radio-field">
+        <input type="radio" name="question" value="${answer1}">
+        <label for="question">${answer1}</label><br>
+        <input type="radio" name="question" value="${answer2}">
+        <label for="question">${answer2}</label><br>
+        <input type="radio" name="question" value="${answer3}">
+        <label for="question">${answer3}</label><br>
+        <input type="radio" name="question" value="${answer4}">
+        <label for="question">${answer4}</label><br>
+      </div>
+        <button class="js-submit-answer-button">Submit</button>
+    </div>`;
 }
 
-function getScoreBoard() {
-  console.log('`getScoreBoard` ran');
-  return view[5]; // return the scoreboard
+function createScore() {
+  let score = store.score;
+  let questionNumber = store.currentQuestion;
+  let totalQuestions = store.questions.length;
+  return `
+    <div>
+      <p>Score: ${score}<p>
+      <p>Question ${questionNumber}/${totalQuestions}</p>
+    </div>`;
 }
 
-function getQuestionEval(answer) {
-  console.log('`getQuestionEval` ran');
-  console.log(`Correct answer is ${store.questions[currentQuestion].correctAnswer}`)
-  console.log(`Your answer was ${answer}`)
-  if (store.questions[currentQuestion].correctAnswer === answer) {
-    return 'Correct';
-  } else {
-    return 'Incorrect';
-  }
+function createIncorrect() {
+  let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
+  return `
+    <div>
+      <p>Not quite!</p>
+      <p>The correct answer was ${correctAnswer}!</p>
+      <button class="js-next-question-button">Next</button>
+    </div>`;
 }
 
-function getQuestionCorrectResponse() {
-  console.log('`getQuestionCorrectResponse` ran');
-  return view[2];
+function createCorrect() {
+  return `
+    <div>
+      <p>You're right!</p>
+      <button class="js-next-question-button">Next</button>
+    </div>`;
 }
 
-function getQuestionIncorrectResponse() {
-  console.log('`getQuestionIncorrectResponse` ran');
-  return view[3];
-}
-
-function getFinish() {
-  console.log('`getFinish` ran');
-  currentQuestion = 0;
-  return view[4]
+function createFinish() {
+  return `
+  <div>
+    <p>You've finished my quiz!</p>
+    <button class="js-restart-button">Restart</button>
+  </div>`;
 }
 
 
@@ -157,41 +140,34 @@ function getFinish() {
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 
-function render(index) {
-  console.log('`render` ran');
-  // empty the html variable so we can give a new value
-  html = '';
+function renderStart() {
+  let html = createStart();
 
-  // depending on the index we're given, return different HTML views
-  switch (index) {
-  case 0: // Start view
-    html = getStartView(index);
-    break;
-  case 1: // Question view
-    html = getScoreBoard(); // scoreboard is visible over all questions and the finish view
-    html += getQuestion();
-    break;
-  case 2: // Question correct response view
-    html = getScoreBoard();
-    html += getQuestionCorrectResponse(index);
-    break;
-  case 3: // Question incorrect response view
-    html = getScoreBoard();
-    html += getQuestionIncorrectResponse(index);
-  break;
-  case 4: // Quiz finish view
-    html = getScoreBoard();
-    html += getFinish();
-    break;
-  case 5: // Scoreboard view
-    html = getScoreBoard(); // this should not trigger normally
-    break;
-  default:
-    html = 'Something broke!!!';
-    break;
-  }
-  
-  // insert that HTML into the DOM
+  $('main').html(html);
+}
+
+function renderQuestion() {
+  let html = createScore();
+  html += createQuestion();
+
+  $('main').html(html);
+}
+
+function renderCorrect() {
+  let html = createScore();
+  html += createCorrect();
+  $('main').html(html);
+}
+
+function renderIncorrect() {
+  let html = createScore();
+  html += createIncorrect();
+  $('main').html(html);
+}
+
+function renderFinish() {
+  let html = createScore();
+  html += createFinish();
   $('main').html(html);
 }
 
@@ -202,47 +178,52 @@ function render(index) {
 function handleStartClick() {
   $('main').on('click', '.js-start-button', event => {
     event.preventDefault();
-    console.log('`handleStartClick` ran')
-    render(1) // go to question view
-  })
+    renderQuestion();
+
+  });
 }
 
 function handleSubmitQuestion() {
-  $('main').on('click', '.js-submit-question-button', event => {
+  $('main').on('click', '.js-submit-answer-button', event => {
     event.preventDefault();
-    console.log('`handleSubmitQuestion` ran');
-    if (currentQuestion === store.questions.length) {
-      render(4);
+    let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
+
+    if ($('input:checked').val() === correctAnswer) {
+      store.score ++;
+      renderCorrect();
     } else {
-      if (getQuestionEval($('input:checked').val()) === 'Correct') {
-        currentQuestion ++;
-        render(2); // go to question correct response view
-      } else {
-        currentQuestion ++;
-        render(3); // go to question incorrect response view
-      }
+      renderIncorrect();
     }
-  })
+  });
 }
 
 function handleNextQuestion() {
-  console.log('`handleNextQuestion` ran')
   $('main').on('click', '.js-next-question-button', event => {
-    render(1) // go to question view
-  })
+    event.preventDefault();
+    let currentQuestion = store.currentQuestion;
+    let totalQuestions =store.questions.length;
+
+    if (currentQuestion + 1 >= totalQuestions) {
+      renderFinish();
+    } else {
+      store.currentQuestion ++;
+      renderQuestion();
+    }
+  });
 }
 
 function handleRestart() {
-  console.log('`handleRestart` ran')
   $('main').on('click', '.js-restart-button', event => {
-    render(0) // go to the main page
-  })
+    store.score = 0;
+    store.currentQuestion = 0;
+    renderStart()
+  });
 }
 
 
 // Everythign starts right here
 function handleQuiz() {
-  render(0);
+  renderStart();
   handleStartClick();
   handleSubmitQuestion();
   handleNextQuestion();
