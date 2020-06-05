@@ -21,26 +21,26 @@ const store = {
   // 5 or more questions are required
   questions: [
     {
-      question: 'What color is broccoli?',
+      question: 'Is HTML/CSS a programming language?',
       answers: [
-        'red',
-        'orange',
-        'pink',
-        'green'
+        'Yes, it is JavaScript',
+        'Yes, it is JQuery',
+        'No, they are not languages at all',
+        'No, they are markup languages'
       ],
-      correctAnswer: 'green',
-      funFact: `Did you know that cabbage, broccoli, cauliflower, kale, Brussels sprouts, collard greens, Savoy cabbage, kohlrabi, and gai lan are all the same species, <b><i>Brassica oleracea</b></i>?</p>`
+      correctAnswer: 'No, they are markup languages',
+      funFact: `<p>Did you know that the <code>&lt;menuitem&gt;</code> HTML tag only works in Mozilla FireFox?</p>`
     },
     {
-      question: 'What is the current year?',
+      question: 'What is the correct order for <code>git push</code>, <code>git add</code> and <code>git commit</code>?',
       answers: [
-        '1970',
-        '2015',
-        '2020',
-        '2005'
+        '<code>add</code>, <code>commit</code>, <code>push</code>',
+        '<code>add</code>, <code>push</code>, <code>commit</code>',
+        '<code>commit</code>, <code>add</code>, <code>push</code>',
+        '<code>push</code>, <code>commit</code>, <code>add</code>'
       ],
-      correctAnswer: '2020'
-      funFact: `2020 is the worst year in my life!`
+      correctAnswer: '<code>add</code>, <code>commit</code>, <code>push</code>',
+      funFact: `I don't actually know how to use <code>git fetch</code>!`
     }
   ],
   score: 0,
@@ -99,7 +99,7 @@ function createQuestion() {
         <label for="question">${answer3}</label><br>
         <input type="radio" name="question" value="${answer4}">
         <label for="question">${answer4}</label>
-      </div>
+      </div class="box">
         <button class="js-submit-answer-button">Submit</button>
     </div>
   </body>`;
@@ -133,11 +133,13 @@ function createIncorrect() {
 }
 
 function createCorrect() {
+  let currentQuestion = store.currentQuestion;
+  let funFact = store.questions[currentQuestion].funFact;
   return `
   <body>
     <div class="box">
       <p>You're right!</p>
-      <p>
+      <p>Fun fact: ${funFact}</p>
       <button class="js-next-question-button">Next</button>
     </div>`;
 }
@@ -194,6 +196,7 @@ function renderFinish() {
 function handleStartClick() {
   $('main').on('click', '.js-start-button', event => {
     event.preventDefault();
+    event.stopPropagation();
     renderQuestion();
 
   });
@@ -202,6 +205,7 @@ function handleStartClick() {
 function handleSubmitQuestion() {
   $('main').on('click', '.js-submit-answer-button', event => {
     event.preventDefault();
+    event.stopPropagation();
     let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
 
     if ($('input:checked').val() === correctAnswer) {
@@ -218,6 +222,7 @@ function handleSubmitQuestion() {
 function handleNextQuestion() {
   $('main').on('click', '.js-next-question-button', event => {
     event.preventDefault();
+    event.stopPropagation();
     let currentQuestion = store.currentQuestion;
     let totalQuestions =store.questions.length;
 
@@ -232,6 +237,8 @@ function handleNextQuestion() {
 
 function handleRestart() {
   $('main').on('click', '.js-restart-button', event => {
+    event.preventDefault();
+    event.stopPropagation();
     store.score = 0;
     store.currentQuestion = 0;
     renderStart()
