@@ -1,41 +1,137 @@
+/* eslint-disable quotes */
 /* eslint-disable strict */
 /**
  * Example store structure
  */
+
+/* User stories
+The starting screen should have a button that users can click to start the quiz.
+Users should be prompted through a series of at least 5 multiple choice questions that they can answer.
+Users should be asked questions 1 after the other.
+Users should only be prompted with 1 question at a time.
+Users should not be able to skip questions.
+Users should also be able to see which question they're on (for instance, "7 out of 10") and their current score ("5 correct, 2 incorrect").
+Upon submitting an answer, users should:
+receive textual feedback about their answer. If they were incorrect, they should be told the correct answer.
+be moved onto the next question (or interact with an element to move on).
+Users should be shown their overall score at the end of the quiz. In other words, how many questions they got right out of the total questions asked.
+Users should be able to start a new quiz.
+*/
 const store = {
   // 5 or more questions are required
   questions: [
     {
-      question: 'What color is broccoli?',
+      question: 'Is HTML/CSS a programming language?',
       answers: [
-        'red',
-        'orange',
-        'pink',
-        'green'
+        'Yes, it is JavaScript',
+        'Yes, it is JQuery',
+        'No, they are not languages at all',
+        'No, they are markup languages'
       ],
-      correctAnswer: 'green'
+      correctAnswer: 'No, they are markup languages',
+      funFact: `<p>Did you know that the <code>&lt;menuitem&gt;</code> HTML tag only works in Mozilla FireFox?</p>`
     },
     {
-      question: 'What is the current year?',
+      question: 'What is the correct order for <code>git push</code>, <code>git add</code> and <code>git commit</code>?',
       answers: [
-        '1970',
-        '2015',
-        '2019',
-        '2005'
+        '<code>add</code>, <code>commit</code>, <code>push</code>',
+        '<code>add</code>, <code>push</code>, <code>commit</code>',
+        '<code>commit</code>, <code>add</code>, <code>push</code>',
+        '<code>push</code>, <code>commit</code>, <code>add</code>'
       ],
-      correctAnswer: '2019'
+      correctAnswer: '<code>add</code>, <code>commit</code>, <code>push</code>',
+      funFact: `I don't actually know how to use <code>git fetch</code>!`
+    },
+    {
+      question: 'Which one of these array methods mutates the array?',
+      answers: [
+        '<code>.concat()</code>',
+        '<code>.slice()</code>',
+        '<code>.splice()</code>',
+        '<code>.filter()</code>'
+      ],
+      correctAnswer: '<code>.splice()</code>',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: 'What do <code>for...in</code> and <code>for...of</code> deal with?',
+      answers: [
+        '<code>for...in</code> is for arrays and <code>for...of</code> is for objects',
+        '<code>for...in</code> is for objects and <code>for...of</code> is for arrays',
+        '<code>for...in</code> and <code>for...of</code> deal with both objects and arrays',
+        'Neither, they deal with conditionals.'
+      ],
+      correctAnswer: '<code>for...in</code> is for objects and <code>for...of</code> is for arrays',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: 'Inside which HTML element do we put JavaScript?',
+      answers: [
+        '<code>&lt;html&gt;</code>',
+        '<code>&lt;main&gt;</code>',
+        '<code>&lt;script&gt;</code>',
+        `<code>&lt;type=&quot;javascript&quot;&gt;</code>`
+      ],
+      correctAnswer: '<code>&lt;script&gt;</code>',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: 'How do you write "Hello World" in an alert box?',
+      answers: [
+        'msgBox("Hello World")',
+        'msg("Hello World");',
+        'alertBox("Hello World");',
+        'alert("Hello World");'
+      ],
+      correctAnswer: 'alert("Hello World");',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: '',
+      answers: [
+        '',
+        '',
+        '',
+        ''
+      ],
+      correctAnswer: '',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: '',
+      answers: [
+        '',
+        '',
+        '',
+        ''
+      ],
+      correctAnswer: '',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: '',
+      answers: [
+        '',
+        '',
+        '',
+        ''
+      ],
+      correctAnswer: '',
+      funFact: 'fun fact missing'
     }
   ],
-  quizStarted: false,
-  questionNumber: 0,
-  score: 0
+  score: 0,
+  currentQuestion: 0
 };
+
+
+
 
 /**
  * 
  * Technical requirements:
  * 
- * Your app should include a render() function, that regenerates the view each time the store is updated. 
+ * Your app should include a render() function, that recreates the view each time the store is updated. 
  * See your course material, consult your instructor, and reference the slides for more details.
  *
  * NO additional HTML elements should be added to the index.html file.
@@ -50,25 +146,191 @@ const store = {
 
 // These functions return HTML templates
 
+function createStart() {
+  return `
+  <body>
+    <div class="box">
+      <p>Welcome to the quiz, press Start to begin</p>
+      <button class="js-start-button">Start</button>
+    </div>
+  </body>`;
+}
+
+function createQuestion() {
+  let question = store.questions[store.currentQuestion].question;
+  let answer1 = store.questions[store.currentQuestion].answers[0];
+  let answer2 = store.questions[store.currentQuestion].answers[1];
+  let answer3 = store.questions[store.currentQuestion].answers[2];
+  let answer4 = store.questions[store.currentQuestion].answers[3];
+
+  return `
+  <body>
+    <div class="box">
+      <label>${question}</label><br>
+      <div class="box">
+        <input type="radio" name="question" value="${answer1}" checked>
+        <label for="question">${answer1}</label><br>
+        <input type="radio" name="question" value="${answer2}">
+        <label for="question">${answer2}</label><br>
+        <input type="radio" name="question" value="${answer3}">
+        <label for="question">${answer3}</label><br>
+        <input type="radio" name="question" value="${answer4}">
+        <label for="question">${answer4}</label>
+      </div class="box">
+        <button class="js-submit-answer-button">Submit</button>
+    </div>
+  </body>`;
+}
+
+function createScore() {
+  let score = store.score;
+  let questionNumber = store.currentQuestion;
+  let totalQuestions = store.questions.length;
+
+  return `
+    <body>
+      <div class="box">
+        <p>Score: ${score}<p>
+        <p>Question ${questionNumber}/${totalQuestions}</p>
+      </div>
+    </body>`;
+}
+
+function createIncorrect() {
+  let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
+
+  return `
+  <body>
+    <div class="box">
+      <p>Not quite!</p>
+      <p>The correct answer was ${correctAnswer}!</p>
+      <button class="js-next-question-button">Next</button>
+    </div>
+  </body>`;
+}
+
+function createCorrect() {
+  let currentQuestion = store.currentQuestion;
+  let funFact = store.questions[currentQuestion].funFact;
+  return `
+  <body>
+    <div class="box">
+      <p>You're right!</p>
+      <p>Fun fact: ${funFact}</p>
+      <button class="js-next-question-button">Next</button>
+    </div>`;
+}
+
+function createFinish() {
+  let correctQuestions = store.score;
+  let totalQuestions = store.questions.length;
+
+  return `
+  <div>
+    <p>You've finished my quiz!</p>
+    <p>Your score was ${correctQuestions} correct out of ${totalQuestions} questions.</p>
+    <button class="js-restart-button">Restart</button>
+  </div>`;
+}
+
+
 /********** RENDER FUNCTION(S) **********/
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 
-function renderView() {
-  console.log('`renderView` ran')
+function renderStart() {
+  let html = createStart();
+
+  $('main').html(html);
+}
+
+function renderQuestion() {
+  let html = createScore();
+  html += createQuestion();
+
+  $('main').html(html);
+}
+
+function renderCorrect() {
+  let html = createCorrect();
+  $('main').html(html);
+}
+
+function renderIncorrect() {
+  let html = createIncorrect();
+  $('main').html(html);
+}
+
+function renderFinish() {
+  let html = createFinish();
+  $('main').html(html);
 }
 
 /********** EVENT HANDLER FUNCTIONS **********/
 
 // These functions handle events (submit, click, etc)
 
+function handleStartClick() {
+  $('main').on('click', '.js-start-button', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    renderQuestion();
+
+  });
+}
+
+function handleSubmitQuestion() {
+  $('main').on('click', '.js-submit-answer-button', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
+
+    if ($('input:checked').val() === correctAnswer) {
+      store.score ++;
+      renderCorrect();
+    } else if ($('input:checked').val() === undefined) {
+      alert('You did not choose an answer!');
+    } else {
+      renderIncorrect();
+    }
+  });
+}
+
+function handleNextQuestion() {
+  $('main').on('click', '.js-next-question-button', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    let currentQuestion = store.currentQuestion;
+    let totalQuestions =store.questions.length;
+
+    if (currentQuestion + 1 >= totalQuestions) {
+      renderFinish();
+    } else {
+      store.currentQuestion ++;
+      renderQuestion();
+    }
+  });
+}
+
+function handleRestart() {
+  $('main').on('click', '.js-restart-button', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    store.score = 0;
+    store.currentQuestion = 0;
+    renderStart()
+  });
+}
+
+
+// Everythign starts right here
 function handleQuiz() {
-  renderView();
-
-
-
-
-
+  renderStart();
+  handleStartClick();
+  handleSubmitQuestion();
+  handleNextQuestion();
+  handleRestart();
 }
 
 $(handleQuiz);
+
