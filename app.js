@@ -41,6 +41,83 @@ const store = {
       ],
       correctAnswer: '<code>add</code>, <code>commit</code>, <code>push</code>',
       funFact: `I don't actually know how to use <code>git fetch</code>!`
+    },
+    {
+      question: 'Which one of these array methods mutates the array?',
+      answers: [
+        '<code>.concat()</code>',
+        '<code>.slice()</code>',
+        '<code>.splice()</code>',
+        '<code>.filter()</code>'
+      ],
+      correctAnswer: '<code>.splice()</code>',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: 'What do <code>for...in</code> and <code>for...of</code> deal with?',
+      answers: [
+        '<code>for...in</code> is for arrays and <code>for...of</code> is for objects',
+        '<code>for...in</code> is for objects and <code>for...of</code> is for arrays',
+        '<code>for...in</code> and <code>for...of</code> deal with both objects and arrays',
+        'Neither, they deal with conditionals.'
+      ],
+      correctAnswer: '<code>for...in</code> is for objects and <code>for...of</code> is for arrays',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: 'Inside which HTML element do we put JavaScript?',
+      answers: [
+        '<code>&lt;html&gt;</code>',
+        '<code>&lt;main&gt;</code>',
+        '<code>&lt;script&gt;</code>',
+        `<code>&lt;type=&quot;javascript&quot;&gt;</code>`
+      ],
+      correctAnswer: '<code>&lt;script&gt;</code>',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: 'How do you write "Hello World" in an alert box?',
+      answers: [
+        'msgBox("Hello World")',
+        'msg("Hello World");',
+        'alertBox("Hello World");',
+        'alert("Hello World");'
+      ],
+      correctAnswer: 'alert("Hello World");',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: '',
+      answers: [
+        '',
+        '',
+        '',
+        ''
+      ],
+      correctAnswer: '',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: '',
+      answers: [
+        '',
+        '',
+        '',
+        ''
+      ],
+      correctAnswer: '',
+      funFact: 'fun fact missing'
+    },
+    {
+      question: '',
+      answers: [
+        '',
+        '',
+        '',
+        ''
+      ],
+      correctAnswer: '',
+      funFact: 'fun fact missing'
     }
   ],
   score: 0,
@@ -91,7 +168,7 @@ function createQuestion() {
     <div class="box">
       <label>${question}</label><br>
       <div class="box">
-        <input type="radio" name="question" value="${answer1}">
+        <input type="radio" name="question" value="${answer1}" checked>
         <label for="question">${answer1}</label><br>
         <input type="radio" name="question" value="${answer2}">
         <label for="question">${answer2}</label><br>
