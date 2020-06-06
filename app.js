@@ -51,7 +51,7 @@ const store = {
         '<code>.filter()</code>'
       ],
       correctAnswer: '<code>.splice()</code>',
-      funFact: 'fun fact missing'
+      funFact: 'Pig and elephant DNA just won&#39;t splice.'
     },
     {
       question: 'What do <code>for...in</code> and <code>for...of</code> deal with?',
@@ -62,62 +62,62 @@ const store = {
         'Neither, they deal with conditionals.'
       ],
       correctAnswer: '<code>for...in</code> is for objects and <code>for...of</code> is for arrays',
-      funFact: 'fun fact missing'
+      funFact: '<code>for...in</code> kinda sounds like the word foreign.'
     },
     {
       question: 'Inside which HTML element do we put JavaScript?',
       answers: [
-        '<code>&lt;html&gt;</code>',
-        '<code>&lt;main&gt;</code>',
-        '<code>&lt;script&gt;</code>',
-        `<code>&lt;type=&quot;javascript&quot;&gt;</code>`
+        '<code>html</code>',
+        '<code>main</code>',
+        '<code>script</code>',
+        '<code>type=&quot;text/javascript&quot;</code>' // I tried using &lt; and &gt; but when seeing if answer[0] was equal to correctAnswer it would never evaluate to true 
       ],
-      correctAnswer: '<code>&lt;script&gt;</code>',
-      funFact: 'fun fact missing'
+      correctAnswer: '<code>script</code>',
+      funFact: 'The word script comes from the Latin word <i>scriba</i>, which also meant secretary!'
     },
     {
-      question: 'How do you write "Hello World" in an alert box?',
+      question: 'What is the correct tag to begin an alert box?',
       answers: [
-        'msgBox("Hello World")',
-        'msg("Hello World");',
-        'alertBox("Hello World");',
-        'alert("Hello World");'
+        '<code>msg</code>',
+        '<code>msgBox</code>',
+        '<code>alertBox</code>',
+        '<code>alert</code>', // I tried using &#40; and &#41; but when seeing if answer[0] was equal to correctAnswer it would never evaluate to true 
       ],
-      correctAnswer: 'alert("Hello World");',
-      funFact: 'fun fact missing'
+      correctAnswer: '<code>alert</code>',
+      funFact: 'Red Alert: Yuri&#39;s Revenge is an amazing game!'
     },
     {
-      question: '',
+      question: 'How do you create a function in JavaScript?',
       answers: [
-        '',
-        '',
-        '',
-        ''
+        '<code>function:myFunction()</code>',
+        '<code>function = myFunction()</code>',
+        '<code>function myFunction()</code>',
+        '<code>function <= myFunction()</code>'
       ],
-      correctAnswer: '',
-      funFact: 'fun fact missing'
+      correctAnswer: '<code>function myFunction()</code>',
+      funFact: 'The first functional programming was LISP!'
     },
     {
-      question: '',
+      question: 'How does a FOR loop start?',
       answers: [
-        '',
-        '',
-        '',
-        ''
+        '<code>for (i = 0; i <= 5; i++)</code>',
+        '<code>for i = 1 to 5</code>',
+        '<code>for (i <= 5; i++)</code>',
+        '<code>for (i = 0; i <= 5)</code>'
       ],
-      correctAnswer: '',
-      funFact: 'fun fact missing'
+      correctAnswer: '<code>for (i = 0; i <= 5; i++)</code>',
+      funFact: 'Fore score and seven loops ago, our LISP-Fathers...'
     },
     {
-      question: '',
+      question: 'How do you add a comment in a JavaScript?',
       answers: [
-        '',
-        '',
-        '',
-        ''
+        '<code>//This is a comment</code>',
+        '<code>&#39;This is a comment&#39;</code>',
+        '<code>&lt;!--This is a comment--&gt;</code>',
+        '<code># This is a comment</code>'
       ],
-      correctAnswer: '',
-      funFact: 'fun fact missing'
+      correctAnswer: '<code>//This is a comment</code>',
+      funFact: '&quot;Don&#39;t document bad code – rewrite it.&quot; ~The Elements of Programming Style, Kernighan & Plauger'
     }
   ],
   score: 0,
@@ -167,8 +167,8 @@ function createQuestion() {
   <body>
     <div class="box">
       <label>${question}</label><br>
-      <div class="box">
-        <input type="radio" name="question" value="${answer1}" checked>
+      <div class="blue-box">
+        <input type="radio" name="question" value="${answer1}">
         <label for="question">${answer1}</label><br>
         <input type="radio" name="question" value="${answer2}">
         <label for="question">${answer2}</label><br>
@@ -176,9 +176,12 @@ function createQuestion() {
         <label for="question">${answer3}</label><br>
         <input type="radio" name="question" value="${answer4}">
         <label for="question">${answer4}</label>
-      </div class="box">
-        <button class="js-submit-answer-button">Submit</button>
+      </div>
+    </div>  
+    <div class="box">
+      <button class="js-submit-answer-button">Submit</button>
     </div>
+    
   </body>`;
 }
 
@@ -201,8 +204,8 @@ function createIncorrect() {
 
   return `
   <body>
-    <div class="box">
-      <p>Not quite!</p>
+    <div class="blu-box">
+      <p>Nope!</p>
       <p>The correct answer was ${correctAnswer}!</p>
       <button class="js-next-question-button">Next</button>
     </div>
@@ -214,11 +217,14 @@ function createCorrect() {
   let funFact = store.questions[currentQuestion].funFact;
   return `
   <body>
-    <div class="box">
-      <p>You're right!</p>
+    <div class="blue-box">
+      <p>Correct!</p>
       <p>Fun fact: ${funFact}</p>
+    </div>
+    <div class="box">
       <button class="js-next-question-button">Next</button>
-    </div>`;
+    </div>
+  </body>`;
 }
 
 function createFinish() {
@@ -226,11 +232,16 @@ function createFinish() {
   let totalQuestions = store.questions.length;
 
   return `
-  <div>
-    <p>You've finished my quiz!</p>
-    <p>Your score was ${correctQuestions} correct out of ${totalQuestions} questions.</p>
-    <button class="js-restart-button">Restart</button>
-  </div>`;
+  <body>
+    <div class="blue-box">
+      <p>You've finished my quiz!</p>
+      <p>Percent score: ${Math.floor(correctQuestions/totalQuestions*100)}%</p>
+      <p>Your score was ${correctQuestions} correct out of ${totalQuestions} questions.</p>
+    </div>
+    <div>
+      <button class="js-restart-button">Restart</button>
+    </div>
+  </body>`;
 }
 
 
