@@ -169,7 +169,7 @@ function createQuestion() {
   <body>
       <div class="box">
         <label>${question}</label><br>
-        <form class="blue-box">
+        <form class="js-submit-answer blue-box">
           <input type="radio" name="question" value="${answer1}">
           <label for="question">${answer1}</label><br>
           <input type="radio" name="question" value="${answer2}">
@@ -178,7 +178,7 @@ function createQuestion() {
           <label for="question">${answer3}</label><br>
           <input type="radio" name="question" value="${answer4}">
           <label for="question">${answer4}</label><br><br>
-          <input type="submit" class="js-submit-answer-button" value="Submit">
+          <input type="submit" value="Submit">
         </form>
       </div>  
   </body>`;
@@ -203,16 +203,18 @@ function createIncorrect() {
 
   return `
   <body>
-    <div class="blu-box">
+    <div class="blue-box">
       <p>Nope!</p>
       <p>The correct answer was ${correctAnswer}!</p>
+      </div>
+    <div class="box">
       <button class="js-next-question-button">Next</button>
     </div>
   </body>`;
 }
 
 function createCorrect() {
-  let funFact = store.questions[currentQuestion].funFact;
+  let funFact = store.questions[store.currentQuestion].funFact;
   return `
   <body>
     <div class="blue-box">
@@ -234,8 +236,8 @@ function createFinish() {
     <div class="blue-box">
       <p>You've finished my quiz!</p>
       <p>Percent score: ${Math.floor(
-        (correctQuestions / totalQuestions) * 100
-      )}%</p>
+    (correctQuestions / totalQuestions) * 100
+  )}%</p>
       <p>Your score was ${correctQuestions} correct out of ${totalQuestions} questions.</p>
     </div>
     <div>
@@ -289,7 +291,7 @@ function handleStartClick() {
 }
 
 function handleSubmitQuestion() {
-  $("main").on("click", ".js-submit-answer-button", (event) => {
+  $("main").on("submit", "form.js-submit-answer", (event) => {
     event.preventDefault();
     event.stopPropagation();
     let correctAnswer = store.questions[store.currentQuestion].correctAnswer;
@@ -306,7 +308,8 @@ function handleSubmitQuestion() {
 }
 
 function handleNextQuestion() {
-  $("main").on("click", ".js-next-question-button", (event) => {
+  $("main").on("click", "button.js-next-question-button", (event) => {
+    console.log('next question');
     event.preventDefault();
     event.stopPropagation();
     let currentQuestion = store.currentQuestion;
